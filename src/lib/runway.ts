@@ -17,7 +17,7 @@ interface RunwayTaskStatus {
 
 interface ReferenceImage {
 	uri: string;
-	referenceType: 'subject' | 'style' | 'face';
+	tag: string;
 }
 
 interface GenerateImageParams {
@@ -55,21 +55,21 @@ export async function createImageTask(params: GenerateImageParams): Promise<stri
 	const referenceImages: ReferenceImage[] = [
 		{
 			uri: params.referenceImageUri,
-			referenceType: 'subject'
+			tag: 'garment'
 		}
 	];
 
 	if (params.selfieImageUri) {
 		referenceImages.push({
 			uri: params.selfieImageUri,
-			referenceType: 'face'
+			tag: 'person'
 		});
 	}
 
 	const body = {
 		model: 'gen4_image',
 		promptText: params.promptText,
-		ratio: params.ratio || '1080:1080',
+		ratio: params.ratio || '1024:1024',
 		referenceImages,
 		...(params.seed !== undefined && { seed: params.seed })
 	};
