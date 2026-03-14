@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import OutfitGrid from '$lib/components/OutfitGrid.svelte';
 
 	interface TaskResult {
 		id: string;
 		imageUrl: string;
+		label: string;
 	}
 
 	let outfits = $state<TaskResult[]>([]);
@@ -14,6 +14,7 @@
 	let totalTasks = $state(0);
 	let fullViewUrl = $state('');
 	let savedIds = $state(new Set<string>());
+	let taskLabels = $state<Record<string, string>>({});
 
 	onMount(() => {
 		const raw = sessionStorage.getItem('vestia_generation');
@@ -22,9 +23,16 @@
 			return;
 		}
 
-		const { taskIds } = JSON.parse(raw);
+		const { taskIds, labels } = JSON.parse(raw);
 		totalTasks = taskIds.length;
 		pending = totalTasks;
+
+		// Map task IDs to their variation labels
+		const labelMap: Record<string, string> = {};
+		for (let i = 0; i < taskIds.length; i++) {
+			labelMap[taskIds[i]] = labels?.[i] || '';
+		}
+		taskLabels = labelMap;
 
 		const saved = JSON.parse(localStorage.getItem('vestia_saved') || '[]') as { id: string }[];
 		savedIds = new Set(saved.map((s) => s.id));
@@ -46,7 +54,11 @@
 				const data = await res.json();
 
 				if (data.status === 'SUCCEEDED' && data.output?.length) {
-					outfits = [...outfits, { id: taskId, imageUrl: data.output[0] }];
+					outfits = [...outfits, {
+						id: taskId,
+						imageUrl: data.output[0],
+						label: taskLabels[taskId] || ''
+					}];
 					pending--;
 					return;
 				}
@@ -93,6 +105,7 @@
 <div class="flex flex-col items-center px-6 py-12 gap-10">
 	<div class="text-center space-y-3">
 		<h1 class="font-display text-3xl font-normal tracking-wide">Your Looks</h1>
+		<p class="text-[11px] tracking-[0.15em] uppercase text-black/35">Three ways to style your piece</p>
 		<div class="w-12 h-px bg-black/20 mx-auto"></div>
 	</div>
 
@@ -107,12 +120,31 @@
 	{/if}
 
 	{#if outfits.length > 0}
-		<OutfitGrid
-			{outfits}
-			{savedIds}
-			onToggleSave={toggleSave}
-			onViewFull={(url) => (fullViewUrl = url)}
-		/>
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mx-auto">
+			{#each outfits as outfit (outfit.id)}
+				<div class="flex flex-col">
+					<div class="relative bg-editorial-light overflow-hidden">
+						<button onclick={() => (fullViewUrl = outfit.imageUrl)} class="w-full cursor-pointer bg-transparent border-0 p-0">
+							<img src={outfit.imageUrl} alt="{outfit.label} look" class="w-full aspect-[3/4] object-cover" loading="lazy" />
+						</button>
+						<button
+							onclick={() => toggleSave(outfit.id, outfit.imageUrl)}
+							class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center
+								bg-white/90 backdrop-blur-sm border border-black/10
+								hover:bg-black hover:text-white transition-all cursor-pointer text-sm"
+							aria-label={savedIds.has(outfit.id) ? 'Remove from closet' : 'Save to closet'}
+						>
+							{@html savedIds.has(outfit.id) ? '&#9829;' : '&#9825;'}
+						</button>
+					</div>
+					{#if outfit.label}
+						<div class="pt-4 text-center">
+							<p class="text-[11px] tracking-[0.25em] uppercase text-black/50 font-medium">{outfit.label}</p>
+						</div>
+					{/if}
+				</div>
+			{/each}
+		</div>
 	{/if}
 
 	{#if failed > 0 && pending === 0}

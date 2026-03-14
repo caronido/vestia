@@ -35,11 +35,11 @@
 				throw new Error(data.error || 'Failed to generate looks');
 			}
 
-			const { taskIds } = await res.json();
+			const { taskIds, labels } = await res.json();
 
 			sessionStorage.setItem(
 				'vestia_generation',
-				JSON.stringify({ taskIds, vibe: selectedVibe, occasion: selectedOccasion, imageDataUri })
+				JSON.stringify({ taskIds, labels, vibe: selectedVibe, occasion: selectedOccasion, imageDataUri })
 			);
 
 			goto('/results');

@@ -2,30 +2,40 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { createImageTask } from '$lib/runway';
 
-const FLAT_LAY_PROMPTS: Record<string, string> = {
-	casual:
-		'A complete head-to-toe casual outfit flat lay featuring @garment as the hero piece. Include all items needed for a full look: top, bottom, shoes, handbag or clutch, and jewelry or accessories. Every piece visible and styled together. High-end fashion editorial flat lay, soft diffused lighting, clean white backdrop, Vogue-level styling.',
-	'date-night':
-		'A complete head-to-toe evening outfit flat lay built around @garment. Include all items for the full look: clothing, heels or statement shoes, evening bag or clutch, and jewelry — earrings, bracelet, or necklace. Every piece visible. Fashion editorial flat lay, dramatic warm lighting, moody editorial composition.',
-	work:
-		'A complete head-to-toe professional outfit flat lay anchored by @garment. Include all items for the full look: clothing, polished shoes, structured bag or tote, watch, and minimal jewelry. Every piece visible. Fashion editorial flat lay, crisp bright lighting, minimal sophisticated backdrop.',
-	'street-style':
-		'A complete head-to-toe street style outfit flat lay with @garment as the standout piece. Include all items for the full look: layered clothing, sneakers or boots, crossbody bag or backpack, sunglasses, and accessories. Every piece visible. Fashion editorial flat lay, high-contrast lighting, raw editorial energy.',
-	maternity:
-		'A complete head-to-toe maternity-friendly outfit flat lay styled around @garment. Include all items for the full look: comfortable clothing, stylish flats or low heels, roomy bag, and delicate jewelry. Every piece visible. Fashion editorial flat lay, soft golden lighting, warm inviting composition.'
-};
+// Each look gets a different styling direction for inspiration
+const LOOK_VARIATIONS = [
+	{
+		label: 'Elevated',
+		flatLayStyle:
+			'Styled in an elevated, polished way — luxe fabrics, refined silhouettes, sophisticated color palette.',
+		onBodyStyle:
+			'Styled in an elevated, polished way — luxe fabrics, refined silhouettes, sophisticated and put-together.',
+		photoMood: 'soft studio lighting, clean minimal backdrop, editorial elegance'
+	},
+	{
+		label: 'Bold',
+		flatLayStyle:
+			'Styled with bold, fashion-forward energy — unexpected color pairings, statement accessories, editorial edge.',
+		onBodyStyle:
+			'Styled with bold, fashion-forward energy — unexpected pairings, statement accessories, confident and editorial.',
+		photoMood: 'high-contrast dramatic lighting, moody editorial composition'
+	},
+	{
+		label: 'Effortless',
+		flatLayStyle:
+			'Styled with effortless, undone cool — relaxed layering, textural mix, "thrown-on but perfect" energy.',
+		onBodyStyle:
+			'Styled with effortless, undone cool — relaxed layering, natural movement, "thrown-on but perfect" energy.',
+		photoMood: 'warm natural daylight, organic and lived-in feel'
+	}
+];
 
-const ON_BODY_PROMPTS: Record<string, string> = {
-	casual:
-		'A stylish person @person wearing a complete head-to-toe casual outfit featuring @garment as the hero piece. Full outfit visible including shoes, bag, and accessories like jewelry or sunglasses. Full-body fashion editorial photo showing the entire look from head to toe, natural daylight, clean minimal background, shot on 85mm lens.',
-	'date-night':
-		'A stylish person @person wearing a complete head-to-toe evening outfit built around @garment. Full outfit visible including heels, evening clutch, and statement jewelry. Full-body fashion editorial photo showing the entire look from head to toe, warm moody lighting, sophisticated setting, cinematic composition.',
-	work:
-		'A stylish person @person wearing a complete head-to-toe professional outfit anchored by @garment. Full outfit visible including polished shoes, structured bag, and refined accessories. Full-body fashion editorial photo showing the entire look from head to toe, bright even studio lighting, clean professional backdrop.',
-	'street-style':
-		'A stylish person @person wearing a complete head-to-toe street style outfit with @garment as the standout piece. Full outfit visible including sneakers or boots, bag, sunglasses, and accessories. Full-body fashion editorial street photo showing the entire look from head to toe, urban backdrop, high-contrast natural light.',
-	maternity:
-		'A stylish person @person wearing a complete head-to-toe maternity-friendly outfit styled around @garment. Full outfit visible including comfortable shoes, bag, and delicate jewelry. Full-body fashion editorial photo showing the entire look from head to toe, soft golden light, warm inviting setting.'
+const OCCASION_CONTEXT: Record<string, string> = {
+	casual: 'for a casual everyday setting',
+	'date-night': 'for an evening out or date night',
+	work: 'for a professional work environment',
+	'street-style': 'with street-style attitude',
+	maternity: 'that is maternity-friendly with comfortable, flattering silhouettes'
 };
 
 const OCCASION_SUFFIX: Record<string, string> = {
@@ -35,6 +45,20 @@ const OCCASION_SUFFIX: Record<string, string> = {
 	'weekend-brunch': ' Perfect for a relaxed weekend brunch.'
 };
 
+function buildFlatLayPrompt(variation: typeof LOOK_VARIATIONS[number], vibe: string, occasion?: string): string {
+	const context = OCCASION_CONTEXT[vibe] || '';
+	const suffix = occasion ? OCCASION_SUFFIX[occasion] || '' : '';
+
+	return `A complete head-to-toe outfit flat lay featuring @garment as the hero piece ${context}. ${variation.flatLayStyle} Include all items for a full look: complementary clothing, shoes, bag, and jewelry or accessories. Every piece visible and styled together. High-end fashion editorial flat lay, ${variation.photoMood}, Vogue-level styling.${suffix}`;
+}
+
+function buildOnBodyPrompt(variation: typeof LOOK_VARIATIONS[number], vibe: string, occasion?: string): string {
+	const context = OCCASION_CONTEXT[vibe] || '';
+	const suffix = occasion ? OCCASION_SUFFIX[occasion] || '' : '';
+
+	return `A stylish person @person wearing a complete head-to-toe outfit featuring @garment as the hero piece ${context}. ${variation.onBodyStyle} Full outfit visible including shoes, bag, and accessories. Full-body fashion editorial photo showing the entire look from head to toe, ${variation.photoMood}, shot on 85mm lens.${suffix}`;
+}
+
 export const POST: RequestHandler = async ({ request }) => {
 	const { imageDataUri, selfieDataUri, vibe, occasion } = await request.json();
 
@@ -42,18 +66,18 @@ export const POST: RequestHandler = async ({ request }) => {
 		return json({ error: 'Image and style are required.' }, { status: 400 });
 	}
 
-	const prompts = selfieDataUri ? ON_BODY_PROMPTS : FLAT_LAY_PROMPTS;
-	const basePrompt = prompts[vibe];
-	if (!basePrompt) {
+	if (!OCCASION_CONTEXT[vibe]) {
 		return json({ error: 'Invalid style.' }, { status: 400 });
 	}
 
-	const prompt = basePrompt + (occasion ? OCCASION_SUFFIX[occasion] || '' : '');
-
-	// Generate 3 looks sequentially (Runway concurrency limits)
 	const taskIds: string[] = [];
 
 	for (let i = 0; i < 3; i++) {
+		const variation = LOOK_VARIATIONS[i];
+		const prompt = selfieDataUri
+			? buildOnBodyPrompt(variation, vibe, occasion)
+			: buildFlatLayPrompt(variation, vibe, occasion);
+
 		try {
 			const taskId = await createImageTask({
 				promptText: prompt,
@@ -66,11 +90,12 @@ export const POST: RequestHandler = async ({ request }) => {
 		} catch (e) {
 			const msg = (e as Error).message;
 			if (msg === 'RATE_LIMITED' && taskIds.length > 0) {
-				break; // Return whatever we managed to queue
+				break;
 			}
 			return json({ error: `Failed to create task: ${msg}` }, { status: 500 });
 		}
 	}
 
-	return json({ taskIds });
+	const labels = LOOK_VARIATIONS.slice(0, taskIds.length).map((v) => v.label);
+	return json({ taskIds, labels });
 };
