@@ -74,7 +74,7 @@ export async function createImageTask(params: GenerateImageParams): Promise<stri
 		...(params.seed !== undefined && { seed: params.seed })
 	};
 
-	const data: RunwayTaskResponse = await runwayFetch('/v1/image/gen4_image', {
+	const data: RunwayTaskResponse = await runwayFetch('/v1/text_to_image', {
 		method: 'POST',
 		body: JSON.stringify(body)
 	});
