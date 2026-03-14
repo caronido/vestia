@@ -4,28 +4,28 @@ import { createImageTask } from '$lib/runway';
 
 const FLAT_LAY_PROMPTS: Record<string, string> = {
 	casual:
-		'An effortlessly chic casual outfit featuring @garment as the hero piece. Styled with on-trend complementary items for an elevated everyday look. High-end fashion editorial flat lay, soft diffused lighting, clean white backdrop, Vogue-level styling.',
+		'A complete head-to-toe casual outfit flat lay featuring @garment as the hero piece. Include all items needed for a full look: top, bottom, shoes, handbag or clutch, and jewelry or accessories. Every piece visible and styled together. High-end fashion editorial flat lay, soft diffused lighting, clean white backdrop, Vogue-level styling.',
 	'date-night':
-		'A head-turning evening outfit built around @garment. Luxe complementary pieces for a night out — think sleek, sultry, and statement-making. Fashion editorial flat lay, dramatic warm lighting, moody editorial composition.',
+		'A complete head-to-toe evening outfit flat lay built around @garment. Include all items for the full look: clothing, heels or statement shoes, evening bag or clutch, and jewelry — earrings, bracelet, or necklace. Every piece visible. Fashion editorial flat lay, dramatic warm lighting, moody editorial composition.',
 	work:
-		'A power-dressing outfit anchored by @garment. Sharp, modern, and polished — boardroom-ready with editorial flair. Fashion editorial flat lay, crisp bright lighting, minimal sophisticated backdrop.',
+		'A complete head-to-toe professional outfit flat lay anchored by @garment. Include all items for the full look: clothing, polished shoes, structured bag or tote, watch, and minimal jewelry. Every piece visible. Fashion editorial flat lay, crisp bright lighting, minimal sophisticated backdrop.',
 	'street-style':
-		'An edgy street style outfit with @garment as the standout piece. Bold, fashion-forward layering with unexpected pairings. Fashion editorial flat lay, high-contrast lighting, raw editorial energy.',
+		'A complete head-to-toe street style outfit flat lay with @garment as the standout piece. Include all items for the full look: layered clothing, sneakers or boots, crossbody bag or backpack, sunglasses, and accessories. Every piece visible. Fashion editorial flat lay, high-contrast lighting, raw editorial energy.',
 	maternity:
-		'A chic maternity-friendly outfit styled around @garment. Effortlessly fashionable with relaxed silhouettes that flatter. Fashion editorial flat lay, soft golden lighting, warm inviting composition.'
+		'A complete head-to-toe maternity-friendly outfit flat lay styled around @garment. Include all items for the full look: comfortable clothing, stylish flats or low heels, roomy bag, and delicate jewelry. Every piece visible. Fashion editorial flat lay, soft golden lighting, warm inviting composition.'
 };
 
 const ON_BODY_PROMPTS: Record<string, string> = {
 	casual:
-		'A stylish person @person wearing an effortlessly chic casual outfit featuring @garment as the hero piece. Complementary on-trend pieces for an elevated everyday look. Full-body fashion editorial photo, natural daylight, clean minimal background, shot on 85mm lens.',
+		'A stylish person @person wearing a complete head-to-toe casual outfit featuring @garment as the hero piece. Full outfit visible including shoes, bag, and accessories like jewelry or sunglasses. Full-body fashion editorial photo showing the entire look from head to toe, natural daylight, clean minimal background, shot on 85mm lens.',
 	'date-night':
-		'A stylish person @person wearing a head-turning evening outfit built around @garment. Luxe complementary pieces, sleek and sultry. Full-body fashion editorial photo, warm moody lighting, sophisticated setting, cinematic composition.',
+		'A stylish person @person wearing a complete head-to-toe evening outfit built around @garment. Full outfit visible including heels, evening clutch, and statement jewelry. Full-body fashion editorial photo showing the entire look from head to toe, warm moody lighting, sophisticated setting, cinematic composition.',
 	work:
-		'A stylish person @person wearing a power-dressing outfit anchored by @garment. Sharp, modern, and polished workwear. Full-body fashion editorial photo, bright even studio lighting, clean professional backdrop.',
+		'A stylish person @person wearing a complete head-to-toe professional outfit anchored by @garment. Full outfit visible including polished shoes, structured bag, and refined accessories. Full-body fashion editorial photo showing the entire look from head to toe, bright even studio lighting, clean professional backdrop.',
 	'street-style':
-		'A stylish person @person wearing an edgy street style outfit with @garment as the standout piece. Bold layering, fashion-forward pairings. Full-body fashion editorial street photo, urban backdrop, high-contrast natural light.',
+		'A stylish person @person wearing a complete head-to-toe street style outfit with @garment as the standout piece. Full outfit visible including sneakers or boots, bag, sunglasses, and accessories. Full-body fashion editorial street photo showing the entire look from head to toe, urban backdrop, high-contrast natural light.',
 	maternity:
-		'A stylish person @person wearing a chic maternity-friendly outfit styled around @garment. Effortlessly fashionable, relaxed flattering silhouettes. Full-body fashion editorial photo, soft golden light, warm inviting setting.'
+		'A stylish person @person wearing a complete head-to-toe maternity-friendly outfit styled around @garment. Full outfit visible including comfortable shoes, bag, and delicate jewelry. Full-body fashion editorial photo showing the entire look from head to toe, soft golden light, warm inviting setting.'
 };
 
 const OCCASION_SUFFIX: Record<string, string> = {
