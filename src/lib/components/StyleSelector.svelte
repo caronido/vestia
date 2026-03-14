@@ -1,10 +1,10 @@
 <script lang="ts">
 	const vibes = [
-		{ id: 'casual', label: 'Casual', emoji: '☀️' },
-		{ id: 'date-night', label: 'Date Night', emoji: '🌙' },
-		{ id: 'work', label: 'Work', emoji: '💼' },
-		{ id: 'street-style', label: 'Street Style', emoji: '🔥' },
-		{ id: 'maternity', label: 'Maternity-Friendly', emoji: '🤰' }
+		{ id: 'casual', label: 'Casual' },
+		{ id: 'date-night', label: 'Date Night' },
+		{ id: 'work', label: 'Work' },
+		{ id: 'street-style', label: 'Street Style' },
+		{ id: 'maternity', label: 'Maternity' }
 	] as const;
 
 	const occasions = [
@@ -23,33 +23,35 @@
 	} = $props();
 </script>
 
-<div class="w-full max-w-md mx-auto space-y-6">
+<div class="w-full max-w-lg mx-auto space-y-10">
 	<div>
-		<p class="text-sm font-medium text-gray-700 mb-3 text-center">Pick your vibe</p>
-		<div class="flex flex-wrap justify-center gap-2">
+		<p class="text-[11px] tracking-[0.2em] uppercase text-black/50 mb-4 text-center">Pick Your Vibe</p>
+		<div class="flex flex-wrap justify-center gap-2.5">
 			{#each vibes as vibe}
 				<button
-					class="px-4 py-2 rounded-full text-sm border transition-all cursor-pointer
+					class="px-5 py-2 text-[11px] tracking-[0.15em] uppercase border transition-all cursor-pointer
 						{selectedVibe === vibe.id
 							? 'bg-black text-white border-black'
-							: 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'}"
+							: 'bg-transparent text-black/70 border-black/20 hover:border-black'}"
 					onclick={() => (selectedVibe = vibe.id)}
 				>
-					{vibe.emoji} {vibe.label}
+					{vibe.label}
 				</button>
 			{/each}
 		</div>
 	</div>
 
 	<div>
-		<p class="text-sm font-medium text-gray-700 mb-3 text-center">Occasion <span class="text-gray-400">(optional)</span></p>
-		<div class="flex flex-wrap justify-center gap-2">
+		<p class="text-[11px] tracking-[0.2em] uppercase text-black/50 mb-4 text-center">
+			Occasion <span class="text-black/25">(optional)</span>
+		</p>
+		<div class="flex flex-wrap justify-center gap-2.5">
 			{#each occasions as occasion}
 				<button
-					class="px-4 py-2 rounded-full text-sm border transition-all cursor-pointer
+					class="px-5 py-2 text-[11px] tracking-[0.15em] uppercase border transition-all cursor-pointer
 						{selectedOccasion === occasion.id
 							? 'bg-black text-white border-black'
-							: 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'}"
+							: 'bg-transparent text-black/70 border-black/20 hover:border-black'}"
 					onclick={() => (selectedOccasion = selectedOccasion === occasion.id ? '' : occasion.id)}
 				>
 					{occasion.label}

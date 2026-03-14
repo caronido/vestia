@@ -2,6 +2,9 @@
 	let { size = 'lg' }: { size?: 'sm' | 'lg' } = $props();
 </script>
 
-<span class="font-bold tracking-tight {size === 'lg' ? 'text-4xl' : 'text-xl'}">
-	Vest<span class="text-warm font-black italic">IA</span>
+<span
+	class="font-display tracking-[0.25em] uppercase {size === 'lg' ? 'text-5xl' : 'text-2xl'}"
+	style="font-weight: 700;"
+>
+	VESTIA
 </span>

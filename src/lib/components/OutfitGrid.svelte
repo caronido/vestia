@@ -14,7 +14,7 @@
 	} = $props();
 </script>
 
-<div class="grid grid-cols-2 gap-3 w-full max-w-lg mx-auto">
+<div class="grid grid-cols-2 md:grid-cols-3 gap-px w-full max-w-3xl mx-auto bg-black/10">
 	{#each outfits as outfit (outfit.id)}
 		<OutfitCard
 			imageUrl={outfit.imageUrl}

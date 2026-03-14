@@ -26,11 +26,9 @@
 		totalTasks = taskIds.length;
 		pending = totalTasks;
 
-		// Load saved outfits from localStorage
 		const saved = JSON.parse(localStorage.getItem('vestia_saved') || '[]') as { id: string }[];
 		savedIds = new Set(saved.map((s) => s.id));
 
-		// Poll each task
 		for (const taskId of taskIds) {
 			pollTask(taskId);
 		}
@@ -58,14 +56,11 @@
 					failed++;
 					return;
 				}
-
-				// PENDING, THROTTLED, RUNNING → keep polling
 			} catch {
 				// Network error, retry
 			}
 		}
 
-		// Timed out
 		pending--;
 		failed++;
 	}
@@ -95,16 +90,19 @@
 	}
 </script>
 
-<div class="flex flex-col items-center px-4 py-8 gap-6">
-	<h1 class="text-xl font-semibold">Your Looks</h1>
+<div class="flex flex-col items-center px-6 py-12 gap-10">
+	<div class="text-center space-y-3">
+		<h1 class="font-display text-3xl font-normal tracking-wide">Your Looks</h1>
+		<div class="w-12 h-px bg-black/20 mx-auto"></div>
+	</div>
 
 	{#if pending > 0}
-		<div class="flex flex-col items-center gap-3 py-8">
-			<div class="w-10 h-10 border-3 border-gray-200 border-t-black rounded-full animate-spin"></div>
-			<p class="text-sm text-gray-500">
-				Curating {pending} of {totalTasks} look{totalTasks > 1 ? 's' : ''}...
+		<div class="flex flex-col items-center gap-4 py-12">
+			<div class="w-8 h-8 border border-black/15 border-t-black rounded-full animate-spin"></div>
+			<p class="text-[11px] tracking-[0.2em] uppercase text-black/40">
+				Curating {pending} of {totalTasks} look{totalTasks > 1 ? 's' : ''}
 			</p>
-			<p class="text-xs text-gray-400">Great style takes a moment — 15-30s per look</p>
+			<p class="text-[10px] tracking-[0.1em] uppercase text-black/25">Great style takes a moment</p>
 		</div>
 	{/if}
 
@@ -118,13 +116,15 @@
 	{/if}
 
 	{#if failed > 0 && pending === 0}
-		<p class="text-sm text-gray-400">{failed} look{failed > 1 ? 's' : ''} couldn't be generated.</p>
+		<p class="text-[11px] tracking-[0.15em] uppercase text-black/30">
+			{failed} look{failed > 1 ? 's' : ''} couldn't be generated
+		</p>
 	{/if}
 
 	{#if pending === 0}
 		<button
 			onclick={regenerate}
-			class="px-6 py-2 border border-black text-black rounded-full text-sm font-medium
+			class="px-8 py-3 border border-black text-black text-[11px] tracking-[0.2em] uppercase bg-transparent
 				hover:bg-black hover:text-white transition-colors cursor-pointer"
 		>
 			Start Over
@@ -132,21 +132,21 @@
 	{/if}
 </div>
 
-<!-- Full view modal -->
 {#if fullViewUrl}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+		class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-6"
 		onclick={() => (fullViewUrl = '')}
 		onkeydown={(e) => { if (e.key === 'Escape') fullViewUrl = ''; }}
 	>
 		<div class="relative max-w-2xl w-full">
-			<img src={fullViewUrl} alt="Full look" class="w-full rounded-xl" />
+			<img src={fullViewUrl} alt="Full look" class="w-full" />
 			<button
 				onclick={() => (fullViewUrl = '')}
-				class="absolute top-3 right-3 bg-white/80 rounded-full w-10 h-10 flex items-center justify-center text-lg cursor-pointer border-0"
+				class="absolute top-4 right-4 bg-white text-black w-10 h-10 flex items-center justify-center
+					text-sm cursor-pointer border-0 hover:bg-black hover:text-white transition-colors"
 			>
-				✕
+				&#10005;
 			</button>
 		</div>
 	</div>

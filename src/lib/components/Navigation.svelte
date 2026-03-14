@@ -4,24 +4,26 @@
 	let { currentPath = '/' }: { currentPath?: string } = $props();
 </script>
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-	<div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-		<a href="/" class="no-underline">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-black/10">
+	<div class="flex items-center justify-center py-4">
+		<a href="/" class="no-underline text-black">
 			<Logo size="sm" />
 		</a>
-		<div class="flex gap-6">
-			<a
-				href="/"
-				class="text-sm {currentPath === '/' ? 'text-black font-medium' : 'text-gray-400'} hover:text-black transition-colors no-underline"
-			>
-				Home
-			</a>
-			<a
-				href="/closet"
-				class="text-sm {currentPath === '/closet' ? 'text-black font-medium' : 'text-gray-400'} hover:text-black transition-colors no-underline"
-			>
-				My Closet
-			</a>
-		</div>
+	</div>
+	<div class="border-t border-black/10 flex items-center justify-center gap-8 py-2.5">
+		<a
+			href="/"
+			class="text-[11px] tracking-[0.2em] uppercase no-underline transition-colors
+				{currentPath === '/' ? 'text-black font-medium' : 'text-black/50 hover:text-black'}"
+		>
+			Home
+		</a>
+		<a
+			href="/closet"
+			class="text-[11px] tracking-[0.2em] uppercase no-underline transition-colors
+				{currentPath === '/closet' ? 'text-black font-medium' : 'text-black/50 hover:text-black'}"
+		>
+			My Closet
+		</a>
 	</div>
 </nav>

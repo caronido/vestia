@@ -50,20 +50,23 @@
 	}
 </script>
 
-<div class="flex flex-col items-center px-4 py-16 gap-10">
-	<div class="text-center space-y-3">
+<div class="flex flex-col items-center px-6 py-20 gap-16 max-w-2xl mx-auto">
+	<div class="text-center space-y-5">
 		<Logo size="lg" />
-		<p class="text-gray-500 text-lg">Your AI-Powered Stylist</p>
+		<div class="w-16 h-px bg-black/20 mx-auto"></div>
+		<p class="text-[13px] tracking-[0.15em] uppercase text-black/40 font-light">Your AI-Powered Stylist</p>
 	</div>
 
 	<div class="w-full">
-		<p class="text-center text-sm text-gray-600 mb-4">Upload a piece from your wardrobe</p>
+		<p class="text-center text-[11px] tracking-[0.2em] uppercase text-black/50 mb-5">Upload a piece from your wardrobe</p>
 		<UploadZone onImageSelected={(uri) => (imageDataUri = uri)} />
 	</div>
 
 	{#if imageDataUri}
 		<div class="w-full">
-			<p class="text-center text-sm text-gray-600 mb-4">Add a selfie to see the look on you <span class="text-gray-400">(optional)</span></p>
+			<p class="text-center text-[11px] tracking-[0.2em] uppercase text-black/50 mb-5">
+				Add a selfie to see the look on you <span class="text-black/30">(optional)</span>
+			</p>
 			<UploadZone onImageSelected={(uri) => (selfieDataUri = uri)} />
 		</div>
 	{/if}
@@ -78,13 +81,13 @@
 		<button
 			onclick={generate}
 			disabled={!canGenerate}
-			class="px-8 py-3 bg-black text-white rounded-full font-medium text-sm
-				hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+			class="px-10 py-3.5 bg-black text-white text-[11px] tracking-[0.25em] uppercase font-medium
+				hover:bg-black/80 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer border-0"
 		>
 			{#if isGenerating}
-				<span class="inline-flex items-center gap-2">
-					<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-					Styling your look...
+				<span class="inline-flex items-center gap-3">
+					<span class="w-3.5 h-3.5 border border-white/30 border-t-white rounded-full animate-spin"></span>
+					Styling...
 				</span>
 			{:else}
 				Style My Look
@@ -93,6 +96,6 @@
 	{/if}
 
 	{#if error}
-		<p class="text-red-500 text-sm text-center max-w-sm">{error}</p>
+		<p class="text-red-600 text-xs text-center max-w-sm">{error}</p>
 	{/if}
 </div>

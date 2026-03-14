@@ -12,16 +12,17 @@
 	} = $props();
 </script>
 
-<div class="relative group rounded-2xl overflow-hidden shadow-md bg-gray-50">
+<div class="relative group overflow-hidden bg-editorial-light">
 	<button onclick={onViewFull} class="w-full cursor-pointer bg-transparent border-0 p-0">
-		<img src={imageUrl} alt="Outfit generado" class="w-full aspect-square object-cover" loading="lazy" />
+		<img src={imageUrl} alt="Styled outfit" class="w-full aspect-[3/4] object-cover" loading="lazy" />
 	</button>
 	<button
 		onclick={onToggleSave}
-		class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center
-			shadow-sm hover:scale-110 transition-transform cursor-pointer border-0 text-lg"
-		aria-label={isSaved ? 'Quitar de guardados' : 'Guardar outfit'}
+		class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center
+			bg-white/90 backdrop-blur-sm border border-black/10
+			hover:bg-black hover:text-white transition-all cursor-pointer text-sm"
+		aria-label={isSaved ? 'Remove from closet' : 'Save to closet'}
 	>
-		{isSaved ? '❤️' : '🤍'}
+		{isSaved ? '&#9829;' : '&#9825;'}
 	</button>
 </div>

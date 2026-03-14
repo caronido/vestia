@@ -2,7 +2,15 @@
 
 @theme {
 	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-display: 'Playfair Display', 'Georgia', serif;
 	--color-warm: #c9a96e;
 	--color-warm-light: #e8d5b0;
 	--color-warm-dark: #a88a4e;
+	--color-editorial: #1a1a1a;
+	--color-editorial-light: #f5f5f0;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }

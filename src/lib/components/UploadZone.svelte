@@ -14,7 +14,6 @@
 			return;
 		}
 
-		// Resize client-side to stay under 5MB base64 limit
 		const img = new Image();
 		const reader = new FileReader();
 
@@ -66,19 +65,20 @@
 
 {#if preview}
 	<div class="relative w-full max-w-sm mx-auto">
-		<img src={preview} alt="Selected piece" class="w-full rounded-2xl shadow-lg object-cover aspect-square" />
+		<img src={preview} alt="Selected piece" class="w-full aspect-square object-cover" />
 		<button
 			onclick={reset}
-			class="absolute top-3 right-3 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm hover:bg-black/80 transition-colors cursor-pointer"
+			class="absolute top-3 right-3 bg-white text-black w-8 h-8 flex items-center justify-center text-xs
+				hover:bg-black hover:text-white transition-colors cursor-pointer border border-black/10"
 		>
-			✕
+			&#10005;
 		</button>
 	</div>
 {:else}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="w-full max-w-sm mx-auto border-2 border-dashed rounded-2xl p-12 text-center transition-colors cursor-pointer
-			{isDragging ? 'border-warm bg-warm/5' : 'border-gray-300 hover:border-gray-400'}"
+		class="w-full max-w-sm mx-auto border border-black/15 p-16 text-center transition-colors cursor-pointer
+			{isDragging ? 'border-black bg-black/[0.02]' : 'hover:border-black/40'}"
 		ondragover={(e) => { e.preventDefault(); isDragging = true; }}
 		ondragleave={() => isDragging = false}
 		ondrop={handleDrop}
@@ -87,9 +87,9 @@
 		role="button"
 		tabindex="0"
 	>
-		<div class="text-4xl mb-3 text-gray-300">📸</div>
-		<p class="text-sm text-gray-500 mb-1">Drop your piece here</p>
-		<p class="text-xs text-gray-400">or tap to browse</p>
+		<div class="text-2xl mb-4 text-black/20">+</div>
+		<p class="text-[11px] tracking-[0.15em] uppercase text-black/40 mb-1">Drop your piece here</p>
+		<p class="text-[10px] tracking-[0.1em] uppercase text-black/25">or tap to browse</p>
 		<input
 			id="file-input"
 			type="file"
