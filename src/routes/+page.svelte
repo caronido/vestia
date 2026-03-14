@@ -10,6 +10,7 @@
 	let selfieDataUri = $state('');
 	let selectedVibe = $state('');
 	let selectedOccasion = $state('');
+	let selectedAesthetic = $state('');
 	let accessories = $state<AccessoryItem[]>([]);
 	let isGenerating = $state(false);
 	let error = $state('');
@@ -30,6 +31,7 @@
 					selfieDataUri: selfieDataUri || undefined,
 					vibe: selectedVibe,
 					occasion: selectedOccasion || undefined,
+					aesthetic: selectedAesthetic || undefined,
 					accessories: accessories.length > 0
 						? accessories.map((a) => ({ id: a.id, label: a.label, imageDataUri: a.imageDataUri }))
 						: undefined
@@ -79,7 +81,7 @@
 
 	{#if imageDataUri}
 		<div class="w-full">
-			<StyleSelector bind:selectedVibe bind:selectedOccasion />
+			<StyleSelector bind:selectedVibe bind:selectedOccasion bind:selectedAesthetic />
 		</div>
 	{/if}
 

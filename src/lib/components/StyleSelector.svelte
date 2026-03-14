@@ -14,12 +14,25 @@
 		{ id: 'weekend-brunch', label: 'Weekend Brunch' }
 	] as const;
 
+	const aesthetics = [
+		{ id: 'quiet-luxury', label: 'Quiet Luxury' },
+		{ id: 'old-money', label: 'Old Money' },
+		{ id: 'clean-girl', label: 'Clean Girl' },
+		{ id: 'mob-wife', label: 'Mob Wife' },
+		{ id: 'coastal-grandmother', label: 'Coastal Grandmother' },
+		{ id: 'scandi-minimal', label: 'Scandi Minimal' },
+		{ id: 'downtown-cool', label: 'Downtown Cool' },
+		{ id: 'coquette', label: 'Coquette' }
+	] as const;
+
 	let {
 		selectedVibe = $bindable(''),
-		selectedOccasion = $bindable('')
+		selectedOccasion = $bindable(''),
+		selectedAesthetic = $bindable('')
 	}: {
 		selectedVibe: string;
 		selectedOccasion: string;
+		selectedAesthetic: string;
 	} = $props();
 </script>
 
@@ -36,6 +49,25 @@
 					onclick={() => (selectedVibe = vibe.id)}
 				>
 					{vibe.label}
+				</button>
+			{/each}
+		</div>
+	</div>
+
+	<div>
+		<p class="text-[11px] tracking-[0.2em] uppercase text-black/50 mb-4 text-center">
+			Trending Aesthetic <span class="text-black/25">(optional)</span>
+		</p>
+		<div class="flex flex-wrap justify-center gap-2.5">
+			{#each aesthetics as aesthetic}
+				<button
+					class="px-5 py-2 text-[11px] tracking-[0.15em] uppercase border transition-all cursor-pointer
+						{selectedAesthetic === aesthetic.id
+							? 'bg-black text-white border-black'
+							: 'bg-transparent text-black/70 border-black/20 hover:border-black'}"
+					onclick={() => (selectedAesthetic = selectedAesthetic === aesthetic.id ? '' : aesthetic.id)}
+				>
+					{aesthetic.label}
 				</button>
 			{/each}
 		</div>
