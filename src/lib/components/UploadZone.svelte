@@ -10,7 +10,7 @@
 
 	function handleFile(file: File) {
 		if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
-			alert('Por favor sube una imagen JPEG, PNG o WebP.');
+			alert('Please upload a JPEG, PNG, or WebP image.');
 			return;
 		}
 
@@ -66,7 +66,7 @@
 
 {#if preview}
 	<div class="relative w-full max-w-sm mx-auto">
-		<img src={preview} alt="Prenda seleccionada" class="w-full rounded-2xl shadow-lg object-cover aspect-square" />
+		<img src={preview} alt="Selected piece" class="w-full rounded-2xl shadow-lg object-cover aspect-square" />
 		<button
 			onclick={reset}
 			class="absolute top-3 right-3 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm hover:bg-black/80 transition-colors cursor-pointer"
@@ -88,8 +88,8 @@
 		tabindex="0"
 	>
 		<div class="text-4xl mb-3 text-gray-300">📸</div>
-		<p class="text-sm text-gray-500 mb-1">Arrastra tu prenda aquí</p>
-		<p class="text-xs text-gray-400">o toca para seleccionar</p>
+		<p class="text-sm text-gray-500 mb-1">Drop your piece here</p>
+		<p class="text-xs text-gray-400">or tap to browse</p>
 		<input
 			id="file-input"
 			type="file"

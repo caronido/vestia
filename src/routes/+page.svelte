@@ -5,6 +5,7 @@
 	import StyleSelector from '$lib/components/StyleSelector.svelte';
 
 	let imageDataUri = $state('');
+	let selfieDataUri = $state('');
 	let selectedVibe = $state('');
 	let selectedOccasion = $state('');
 	let isGenerating = $state(false);
@@ -23,6 +24,7 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					imageDataUri,
+					selfieDataUri: selfieDataUri || undefined,
 					vibe: selectedVibe,
 					occasion: selectedOccasion || undefined
 				})
@@ -30,7 +32,7 @@
 
 			if (!res.ok) {
 				const data = await res.json().catch(() => ({}));
-				throw new Error(data.error || 'Error al generar outfits');
+				throw new Error(data.error || 'Failed to generate looks');
 			}
 
 			const { taskIds } = await res.json();
@@ -51,13 +53,20 @@
 <div class="flex flex-col items-center px-4 py-16 gap-10">
 	<div class="text-center space-y-3">
 		<Logo size="lg" />
-		<p class="text-gray-500 text-lg">Tu estilista con inteligencia artificial</p>
+		<p class="text-gray-500 text-lg">Your AI-Powered Stylist</p>
 	</div>
 
 	<div class="w-full">
-		<p class="text-center text-sm text-gray-600 mb-4">Sube una prenda de tu closet</p>
+		<p class="text-center text-sm text-gray-600 mb-4">Upload a piece from your wardrobe</p>
 		<UploadZone onImageSelected={(uri) => (imageDataUri = uri)} />
 	</div>
+
+	{#if imageDataUri}
+		<div class="w-full">
+			<p class="text-center text-sm text-gray-600 mb-4">Add a selfie to see the look on you <span class="text-gray-400">(optional)</span></p>
+			<UploadZone onImageSelected={(uri) => (selfieDataUri = uri)} />
+		</div>
+	{/if}
 
 	{#if imageDataUri}
 		<div class="w-full">
@@ -75,10 +84,10 @@
 			{#if isGenerating}
 				<span class="inline-flex items-center gap-2">
 					<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-					Generando...
+					Styling your look...
 				</span>
 			{:else}
-				Generar Outfits
+				Style My Look
 			{/if}
 		</button>
 	{/if}

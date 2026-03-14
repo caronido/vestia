@@ -14,13 +14,13 @@
 				href="/"
 				class="text-sm {currentPath === '/' ? 'text-black font-medium' : 'text-gray-400'} hover:text-black transition-colors no-underline"
 			>
-				Inicio
+				Home
 			</a>
 			<a
 				href="/closet"
 				class="text-sm {currentPath === '/closet' ? 'text-black font-medium' : 'text-gray-400'} hover:text-black transition-colors no-underline"
 			>
-				Mi Closet
+				My Closet
 			</a>
 		</div>
 	</div>

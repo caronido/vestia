@@ -25,7 +25,7 @@
 
 <div class="w-full max-w-md mx-auto space-y-6">
 	<div>
-		<p class="text-sm font-medium text-gray-700 mb-3 text-center">Elige tu vibe</p>
+		<p class="text-sm font-medium text-gray-700 mb-3 text-center">Pick your vibe</p>
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each vibes as vibe}
 				<button
@@ -42,7 +42,7 @@
 	</div>
 
 	<div>
-		<p class="text-sm font-medium text-gray-700 mb-3 text-center">Ocasión <span class="text-gray-400">(opcional)</span></p>
+		<p class="text-sm font-medium text-gray-700 mb-3 text-center">Occasion <span class="text-gray-400">(optional)</span></p>
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each occasions as occasion}
 				<button

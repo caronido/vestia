@@ -96,15 +96,15 @@
 </script>
 
 <div class="flex flex-col items-center px-4 py-8 gap-6">
-	<h1 class="text-xl font-semibold">Tus Outfits</h1>
+	<h1 class="text-xl font-semibold">Your Looks</h1>
 
 	{#if pending > 0}
 		<div class="flex flex-col items-center gap-3 py-8">
 			<div class="w-10 h-10 border-3 border-gray-200 border-t-black rounded-full animate-spin"></div>
 			<p class="text-sm text-gray-500">
-				Generando {pending} de {totalTasks} outfit{totalTasks > 1 ? 's' : ''}...
+				Curating {pending} of {totalTasks} look{totalTasks > 1 ? 's' : ''}...
 			</p>
-			<p class="text-xs text-gray-400">Esto puede tomar 15-30 segundos por outfit</p>
+			<p class="text-xs text-gray-400">Great style takes a moment — 15-30s per look</p>
 		</div>
 	{/if}
 
@@ -118,7 +118,7 @@
 	{/if}
 
 	{#if failed > 0 && pending === 0}
-		<p class="text-sm text-gray-400">{failed} outfit{failed > 1 ? 's' : ''} no se pudo generar.</p>
+		<p class="text-sm text-gray-400">{failed} look{failed > 1 ? 's' : ''} couldn't be generated.</p>
 	{/if}
 
 	{#if pending === 0}
@@ -127,7 +127,7 @@
 			class="px-6 py-2 border border-black text-black rounded-full text-sm font-medium
 				hover:bg-black hover:text-white transition-colors cursor-pointer"
 		>
-			Generar de nuevo
+			Start Over
 		</button>
 	{/if}
 </div>
@@ -141,7 +141,7 @@
 		onkeydown={(e) => { if (e.key === 'Escape') fullViewUrl = ''; }}
 	>
 		<div class="relative max-w-2xl w-full">
-			<img src={fullViewUrl} alt="Outfit completo" class="w-full rounded-xl" />
+			<img src={fullViewUrl} alt="Full look" class="w-full rounded-xl" />
 			<button
 				onclick={() => (fullViewUrl = '')}
 				class="absolute top-3 right-3 bg-white/80 rounded-full w-10 h-10 flex items-center justify-center text-lg cursor-pointer border-0"

@@ -15,9 +15,15 @@ interface RunwayTaskStatus {
 	failureCode?: string;
 }
 
+interface ReferenceImage {
+	uri: string;
+	referenceType: 'subject' | 'style' | 'face';
+}
+
 interface GenerateImageParams {
 	promptText: string;
 	referenceImageUri: string;
+	selfieImageUri?: string;
 	ratio?: string;
 	seed?: number;
 }
@@ -46,16 +52,25 @@ async function runwayFetch(path: string, options: RequestInit = {}) {
 }
 
 export async function createImageTask(params: GenerateImageParams): Promise<string> {
+	const referenceImages: ReferenceImage[] = [
+		{
+			uri: params.referenceImageUri,
+			referenceType: 'subject'
+		}
+	];
+
+	if (params.selfieImageUri) {
+		referenceImages.push({
+			uri: params.selfieImageUri,
+			referenceType: 'face'
+		});
+	}
+
 	const body = {
 		model: 'gen4_image',
 		promptText: params.promptText,
 		ratio: params.ratio || '1080:1080',
-		referenceImages: [
-			{
-				uri: params.referenceImageUri,
-				referenceType: 'subject'
-			}
-		],
+		referenceImages,
 		...(params.seed !== undefined && { seed: params.seed })
 	};
 
