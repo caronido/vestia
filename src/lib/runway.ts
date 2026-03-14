@@ -1,4 +1,4 @@
-import { RUNWAY_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 const API_BASE = 'https://api.dev.runwayml.com';
 const API_VERSION = '2024-11-06';
@@ -26,7 +26,7 @@ async function runwayFetch(path: string, options: RequestInit = {}) {
 	const res = await fetch(`${API_BASE}${path}`, {
 		...options,
 		headers: {
-			Authorization: `Bearer ${RUNWAY_API_KEY}`,
+			Authorization: `Bearer ${env.RUNWAY_API_KEY}`,
 			'X-Runway-Version': API_VERSION,
 			'Content-Type': 'application/json',
 			...options.headers
