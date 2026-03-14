@@ -45,22 +45,48 @@ const OCCASION_SUFFIX: Record<string, string> = {
 	'weekend-brunch': ' Perfect for a relaxed weekend brunch.'
 };
 
-function buildFlatLayPrompt(variation: typeof LOOK_VARIATIONS[number], vibe: string, occasion?: string): string {
-	const context = OCCASION_CONTEXT[vibe] || '';
-	const suffix = occasion ? OCCASION_SUFFIX[occasion] || '' : '';
-
-	return `A complete head-to-toe outfit flat lay featuring @garment as the hero piece ${context}. ${variation.flatLayStyle} Include all items for a full look: complementary clothing, shoes, bag, and jewelry or accessories. Every piece visible and styled together. High-end fashion editorial flat lay, ${variation.photoMood}, Vogue-level styling.${suffix}`;
+interface AccessoryInput {
+	id: string;
+	label: string;
+	imageDataUri: string;
 }
 
-function buildOnBodyPrompt(variation: typeof LOOK_VARIATIONS[number], vibe: string, occasion?: string): string {
+function buildAccessoryClause(accessories: AccessoryInput[]): string {
+	if (accessories.length === 0) return '';
+
+	const tags = accessories.map((a) => `@${a.id} (${a.label.toLowerCase()})`);
+	const list = tags.join(', ');
+	return ` Incorporate the following owned accessories into the look: ${list}. Only generate the remaining items needed to complete the outfit — do not replace the provided accessories.`;
+}
+
+function buildFlatLayPrompt(
+	variation: typeof LOOK_VARIATIONS[number],
+	vibe: string,
+	accessories: AccessoryInput[],
+	occasion?: string
+): string {
 	const context = OCCASION_CONTEXT[vibe] || '';
 	const suffix = occasion ? OCCASION_SUFFIX[occasion] || '' : '';
+	const accClause = buildAccessoryClause(accessories);
 
-	return `A stylish person @person wearing a complete head-to-toe outfit featuring @garment as the hero piece ${context}. ${variation.onBodyStyle} Full outfit visible including shoes, bag, and accessories. Full-body fashion editorial photo showing the entire look from head to toe, ${variation.photoMood}, shot on 85mm lens.${suffix}`;
+	return `A complete head-to-toe outfit flat lay featuring @garment as the hero piece ${context}. ${variation.flatLayStyle}${accClause} Include all items for a full look: complementary clothing, shoes, bag, and jewelry or accessories. Every piece visible and styled together. High-end fashion editorial flat lay, ${variation.photoMood}, Vogue-level styling.${suffix}`;
+}
+
+function buildOnBodyPrompt(
+	variation: typeof LOOK_VARIATIONS[number],
+	vibe: string,
+	accessories: AccessoryInput[],
+	occasion?: string
+): string {
+	const context = OCCASION_CONTEXT[vibe] || '';
+	const suffix = occasion ? OCCASION_SUFFIX[occasion] || '' : '';
+	const accClause = buildAccessoryClause(accessories);
+
+	return `A stylish person @person wearing a complete head-to-toe outfit featuring @garment as the hero piece ${context}. ${variation.onBodyStyle}${accClause} Full outfit visible including shoes, bag, and accessories. Full-body fashion editorial photo showing the entire look from head to toe, ${variation.photoMood}, shot on 85mm lens.${suffix}`;
 }
 
 export const POST: RequestHandler = async ({ request }) => {
-	const { imageDataUri, selfieDataUri, vibe, occasion } = await request.json();
+	const { imageDataUri, selfieDataUri, vibe, occasion, accessories } = await request.json();
 
 	if (!imageDataUri || !vibe) {
 		return json({ error: 'Image and style are required.' }, { status: 400 });
@@ -70,19 +96,28 @@ export const POST: RequestHandler = async ({ request }) => {
 		return json({ error: 'Invalid style.' }, { status: 400 });
 	}
 
+	const userAccessories: AccessoryInput[] = Array.isArray(accessories) ? accessories : [];
+
+	// Build accessory reference images for Runway
+	const accessoryRefs = userAccessories.map((a) => ({
+		tag: a.id,
+		uri: a.imageDataUri
+	}));
+
 	const taskIds: string[] = [];
 
 	for (let i = 0; i < 3; i++) {
 		const variation = LOOK_VARIATIONS[i];
 		const prompt = selfieDataUri
-			? buildOnBodyPrompt(variation, vibe, occasion)
-			: buildFlatLayPrompt(variation, vibe, occasion);
+			? buildOnBodyPrompt(variation, vibe, userAccessories, occasion)
+			: buildFlatLayPrompt(variation, vibe, userAccessories, occasion);
 
 		try {
 			const taskId = await createImageTask({
 				promptText: prompt,
 				referenceImageUri: imageDataUri,
 				selfieImageUri: selfieDataUri || undefined,
+				accessoryRefs: accessoryRefs.length > 0 ? accessoryRefs : undefined,
 				ratio: '1024:1024',
 				seed: Math.floor(Math.random() * 1_000_000)
 			});

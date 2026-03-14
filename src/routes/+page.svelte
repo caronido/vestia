@@ -3,11 +3,14 @@
 	import Logo from '$lib/components/Logo.svelte';
 	import UploadZone from '$lib/components/UploadZone.svelte';
 	import StyleSelector from '$lib/components/StyleSelector.svelte';
+	import AccessoryPicker from '$lib/components/AccessoryPicker.svelte';
+	import type { AccessoryItem } from '$lib/components/AccessoryPicker.svelte';
 
 	let imageDataUri = $state('');
 	let selfieDataUri = $state('');
 	let selectedVibe = $state('');
 	let selectedOccasion = $state('');
+	let accessories = $state<AccessoryItem[]>([]);
 	let isGenerating = $state(false);
 	let error = $state('');
 
@@ -26,7 +29,10 @@
 					imageDataUri,
 					selfieDataUri: selfieDataUri || undefined,
 					vibe: selectedVibe,
-					occasion: selectedOccasion || undefined
+					occasion: selectedOccasion || undefined,
+					accessories: accessories.length > 0
+						? accessories.map((a) => ({ id: a.id, label: a.label, imageDataUri: a.imageDataUri }))
+						: undefined
 				})
 			});
 
@@ -74,6 +80,12 @@
 	{#if imageDataUri}
 		<div class="w-full">
 			<StyleSelector bind:selectedVibe bind:selectedOccasion />
+		</div>
+	{/if}
+
+	{#if imageDataUri}
+		<div class="w-full">
+			<AccessoryPicker bind:accessories />
 		</div>
 	{/if}
 

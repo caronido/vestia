@@ -20,10 +20,16 @@ interface ReferenceImage {
 	tag: string;
 }
 
+interface AccessoryRef {
+	tag: string;
+	uri: string;
+}
+
 interface GenerateImageParams {
 	promptText: string;
 	referenceImageUri: string;
 	selfieImageUri?: string;
+	accessoryRefs?: AccessoryRef[];
 	ratio?: string;
 	seed?: number;
 }
@@ -64,6 +70,15 @@ export async function createImageTask(params: GenerateImageParams): Promise<stri
 			uri: params.selfieImageUri,
 			tag: 'person'
 		});
+	}
+
+	if (params.accessoryRefs) {
+		for (const acc of params.accessoryRefs) {
+			referenceImages.push({
+				uri: acc.uri,
+				tag: acc.tag
+			});
+		}
 	}
 
 	const body = {
